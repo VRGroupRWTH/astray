@@ -1,0 +1,12 @@
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+
+@PROJECT_DEPENDENCY_DOCTEST@
+@PROJECT_DEPENDENCY_FFMPEG@
+@PROJECT_DEPENDENCY_MPI@
+@PROJECT_DEPENDENCY_DEVICE@
+find_dependency(Eigen3)
+find_dependency(thrust)
+
+include("${CMAKE_CURRENT_LIST_DIR}/astray-targets.cmake")
