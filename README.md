@@ -19,7 +19,7 @@ A performance-portable geodesic ray tracing library.
   - Toggle `ASTRAY_DEVICE_SYSTEM` for CUDA/OMP/TBB support. The build will ask for the location of the respective library upon enabling this option.
   - Remember to generate or run `bootstrap.bat` after changes. You can ignore the cmake developer errors as long as generation is successful.
 
-### Example Usage
+### Example Usage: Rendering a Schwarzschild Black Hole
 ```cpp
 #include <astray/api.hpp>
 
