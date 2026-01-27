@@ -22,7 +22,8 @@ struct proportional_integral_controller
     type squared_sum(0);
     operations::for_each([&] (const auto& p, const auto& r, const auto& e)
     {
-      squared_sum += static_cast<type>(std::pow(std::abs(e) / (absolute_tolerance + relative_tolerance * std::max(std::abs(p), std::abs(r))), 2));
+      const auto normalized_error = std::abs(e) / (absolute_tolerance + relative_tolerance * std::max(std::abs(p), std::abs(r)));
+      squared_sum += normalized_error * normalized_error;
     }, problem.value, result.value, result.error);
 
     type error   = std::sqrt(squared_sum / operations::size(problem.value)); // std::real(squared_sum) unavailable in CUDA until C++20 support.

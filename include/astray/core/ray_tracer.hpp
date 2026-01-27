@@ -207,7 +207,7 @@ public:
     resized_data_type_  = mpi::data_type(subarray_data_type_, 0    , partitioner_.block_size()[0] * sizeof(pixel_type));
 #endif
     
-    std::visit([value] (auto& visited) 
+    std::visit([&value] (auto& visited) 
     { 
       visited.aspect_ratio = static_cast<scalar_type>(value[0]) / static_cast<scalar_type>(value[1]); 
     }, observer_.get_projection());
