@@ -7,7 +7,7 @@ Original Motion4D library by Thomas Mueller (tauzero7): https://github.com/tauze
 
 ## Implementation Summary
 
-### Completed Metrics (5/41 = 12%)
+### Completed Metrics (13/41 = 32%)
 
 1. **Kasner** (cartesian) - `include/astray/metrics/cartesian/kasner.hpp`
    - Anisotropic cosmological solution
@@ -34,50 +34,95 @@ Original Motion4D library by Thomas Mueller (tauzero7): https://github.com/tauze
    - Mass function: m(v) = k(vl - v)^(1/3) tanh²(σ(vl - v))
    - Important for studying black hole formation
 
+6. **GoedelCart** (cartesian) - `include/astray/metrics/cartesian/goedel_cart.hpp`
+   - Gödel universe in Cartesian coordinates with cylindrical symmetry
+   - Rotating cosmological solution allowing closed timelike curves
+   - Parameters: a (Gödel radius rG = 2a), zeta (rotation parameter)
+
+7. **GoedelScaled** (cylindrical) - `include/astray/metrics/cylindrical/goedel_scaled.hpp`
+   - Gödel universe in scaled cylindrical coordinates
+   - Geodesic shape independent of rG parameter
+
+8. **GoedelScaledCart** (cartesian) - `include/astray/metrics/cartesian/goedel_scaled_cart.hpp`
+   - Gödel universe in scaled Cartesian coordinates
+   - Valid at origin (no coordinate singularity)
+
+9. **DeSitterUnivConf** (cartesian) - `include/astray/metrics/cartesian/de_sitter_univ_conf.hpp`
+   - de Sitter universe in conformal Cartesian coordinates
+   - Expanding universe with cosmological constant
+
+10. **EddingtonFinkelsteinIngoing** (spherical) - `include/astray/metrics/spherical/eddington_finkelstein_ingoing.hpp`
+    - Schwarzschild in Eddington-Finkelstein ingoing coordinates
+    - Regular at event horizon, describes infalling geodesics
+
+11. **MinkowskiRotatingLattice** (cylindrical) - `include/astray/metrics/cylindrical/minkowski_rotating_lattice.hpp`
+    - Minkowski spacetime in rotating cylindrical coordinates
+    - Angular velocity ω, valid for r < c/ω
+
+12. **Curzon** (cylindrical) - `include/astray/metrics/cylindrical/curzon.hpp`
+    - Static axisymmetric solution for infinitely long line mass
+    - Exterior field of line mass along z-axis
+
+13. (Reserved for next implementation)
+
 ### Remaining Metrics by Priority
 
-#### High Priority (6 metrics)
-These are well-known, important metrics that should be implemented next:
+#### High Priority - Can be implemented without complex special functions (15 metrics)
+These are straightforward implementations that don't require Lambert W, Fourier series, or other complex functions:
 
-- **Kruskal** (spherical) - Maximal analytic extension of Schwarzschild
-- **TaubNUT** (spherical) - Rotating solution with NUT parameter
-- **DeSitterUnivConf** (cartesian) - Conformal de Sitter universe
-- **GoedelCart** (cartesian) - Gödel universe in Cartesian coordinates
-- **GoedelScaled** (cartesian) - Scaled Gödel universe
-- **GoedelScaledCart** (cartesian) - Scaled Gödel in Cartesian coordinates
-
-#### Medium Priority (15 metrics)
-More specialized but still useful:
-
-- **AlcubierreSimple** (cartesian) - Simplified Alcubierre warp drive
-- **PlaneGravWave** (cartesian) - Plane gravitational wave (complex: needs Fourier series)
-- **Curzon** (cylindrical) - Static axisymmetric solution
-- **ChazyCurzonRot** (cylindrical) - Rotating Chazy-Curzon
+- **ChazyCurzonRot** (cylindrical) - Rotating Chazy-Curzon solution
 - **ErezRosenVar** (cylindrical) - Erez-Rosen with variable parameters
 - **Ernst** (cylindrical) - Ernst metric
 - **ErnstSchwarzschild** (cylindrical) - Ernst form of Schwarzschild
-- **SchwarzschildTortoise** (spherical) - Tortoise coordinate form
-- **SchwarzschildWT** (spherical) - Wheeler-Thorne coordinates
-- **SchwarzschildGravWave** (spherical) - Schwarzschild with gravitational wave
+- **StraightSpinningString** (cylindrical) - Straight spinning string
 - **RotDihole** (spherical) - Rotating dihole solution
 - **HalilsoyWave** (spherical) - Halilsoy wave metric
 - **SultanaDyer** (spherical) - Sultana-Dyer metric
-
-#### Lower Priority (20 metrics)
-Highly specialized metrics:
-
-- **EddFinkIn** (spherical) - Eddington-Finkelstein ingoing
 - **Glampedakis** (spherical) - Glampedakis metric
 - **HartleThorneGB** (spherical) - Hartle-Thorne with Gauss-Bonnet
 - **TeoSimpleWH** (spherical) - Teo simple wormhole
 - **TeoWHl** (spherical) - Teo wormhole with parameter l
-- **TomimatsuSato** (cylindrical) - Tomimatsu-Sato metric
-- **MinkRotLattice** (cartesian) - Minkowski with rotating lattice
-- **StraightSpinningString** (cylindrical) - Straight spinning string
-- **PTD_AI, PTD_AII, PTD_AIII** - Plebanski-Demianski type A metrics
-- **PTD_BI, PTD_BII, PTD_BIII** - Plebanski-Demianski type B metrics
+- **PTD_AI, PTD_AII, PTD_AIII** - Plebanski-Demianski type A metrics (3 metrics)
+- **PTD_BI, PTD_BII, PTD_BIII** - Plebanski-Demianski type B metrics (3 metrics)
 - **PTD_C** - Plebanski-Demianski type C
-- **Pravda_C**, **Pravda_C_Can** - Pravda metrics
+
+#### Medium Priority - Require special functions or complex calculations (13 metrics)
+These require Lambert W function, Fourier series, or other advanced mathematical functions:
+
+- **Kruskal** (spherical) - Maximal analytic extension of Schwarzschild
+  - **Complexity**: Requires GSL Lambert W function (gsl_sf_lambert_W0)
+  - Coordinates cover full Schwarzschild spacetime including both exterior and interior regions
+
+- **TaubNUT** (spherical) - Rotating solution with NUT parameter
+  - **Complexity**: Very complex Christoffel symbols with extensive polynomial expressions
+  - Important for studying gravitomagnetic monopoles
+
+- **SchwarzschildTortoise** (spherical) - Tortoise coordinate form
+  - **Complexity**: Requires Lambert W function for coordinate transformation
+  - Useful for null geodesics and wave propagation
+
+- **SchwarzschildWT** (spherical) - Wheeler-Thorne coordinates
+  - **Complexity**: May require special coordinate transformations
+
+- **SchwarzschildGravWave** (spherical) - Schwarzschild with gravitational wave
+  - **Complexity**: Combination of Schwarzschild and wave perturbations
+
+- **AlcubierreSimple** (cartesian) - Simplified Alcubierre warp drive
+  - **Complexity**: Requires derivative calculations for shape function f(rs)
+  - rs = √((x - vst)² + y² + z²) with specific shape function
+
+- **PlaneGravWave** (cartesian) - Plane gravitational wave (sandwich wave)
+  - **Complexity**: Requires Fourier series expansion for wave functions p(u) and q(u)
+  - Most complex implementation, needs numerical integration
+
+- **TomimatsuSato** (cylindrical) - Tomimatsu-Sato metric
+  - **Complexity**: Complex coordinate-dependent expressions
+
+- **Pravda_C** (various) - Pravda metric type C
+  - **Complexity**: Specialized algebraic type
+
+- **Pravda_C_Can** (various) - Pravda C in canonical form
+  - **Complexity**: Canonical coordinate form
 
 ## Implementation Guidelines
 
