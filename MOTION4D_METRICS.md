@@ -7,7 +7,7 @@ Original Motion4D library by Thomas Mueller (tauzero7): https://github.com/tauze
 
 ## Implementation Summary
 
-### Completed Metrics (13/41 = 32%)
+### Completed Metrics (24/41 = 59%)
 
 1. **Kasner** (cartesian) - `include/astray/metrics/cartesian/kasner.hpp`
    - Anisotropic cosmological solution
@@ -63,31 +63,84 @@ Original Motion4D library by Thomas Mueller (tauzero7): https://github.com/tauze
     - Static axisymmetric solution for infinitely long line mass
     - Exterior field of line mass along z-axis
 
-13. (Reserved for next implementation)
+13. **Ernst** (spherical) - `include/astray/metrics/spherical/ernst.hpp`
+    - Black hole in a magnetic universe
+    - Parameters: mass, magnetic field B
+    - References: Ernst (1976), Konoplya (2007)
+
+14. **ErnstSchwarzschild** (spherical) - `include/astray/metrics/spherical/ernst_schwarzschild.hpp`
+    - Ernst form of Schwarzschild metric in magnetic universe
+    - Similar to Ernst but with different metric signature
+
+15. **RotDihole** (cartesian) - `include/astray/metrics/cartesian/rot_dihole.hpp`
+    - Rotating extreme Reissner-Nordstrom dihole
+    - Two rotating holes with angular velocity ω
+    - Parameters: mass1, mass2, angular_velocity
+
+16. **SultanaDyer** (spherical) - `include/astray/metrics/spherical/sultana_dyer.hpp`
+    - Cosmological black hole in Einstein-de Sitter universe
+    - Time-dependent metric with t⁴ factor
+    - Reference: Sultana & Dyer (2005)
+
+17. **PTD_AI** (spherical) - `include/astray/metrics/spherical/ptd_ai.hpp`
+    - Plebanski-Demianski Type D metric, subclass A I
+    - Exact solution of Petrov Type D
+    - Parameter: b
+
+18. **PTD_AII** (cylindrical) - `include/astray/metrics/cylindrical/ptd_aii.hpp`
+    - Plebanski-Demianski Type D metric, subclass A II
+    - Uses hyperbolic coordinates in r direction
+    - Parameter: b
+
+19. **PTD_AIII** (cylindrical) - `include/astray/metrics/cylindrical/ptd_aiii.hpp`
+    - Plebanski-Demianski Type D metric, subclass A III
+    - Simpler form without parameter b
+
+20. **PTD_BI** (spherical) - `include/astray/metrics/spherical/ptd_bi.hpp`
+    - Plebanski-Demianski Type D metric, subclass B I
+    - Parameter: b
+
+21. **PTD_BII** (cylindrical) - `include/astray/metrics/cylindrical/ptd_bii.hpp`
+    - Plebanski-Demianski Type D metric, subclass B II
+    - Uses hyperbolic coordinates
+    - Parameter: b
+
+22. **PTD_BIII** (cylindrical) - `include/astray/metrics/cylindrical/ptd_biii.hpp`
+    - Plebanski-Demianski Type D metric, subclass B III
+    - Simpler form without parameter b
+
+23. **PTD_C** (cartesian) - `include/astray/metrics/cartesian/ptd_c.hpp`
+    - Plebanski-Demianski Type D metric, Type C
+    - Uses custom coordinates (t, u, x, y)
+    - Parameters: a, b
+
+24. **ChazyCurzonRot** (cylindrical) - `include/astray/metrics/cylindrical/chazy_curzon_rot.hpp`
+    - Rotating generalization of Curzon metric
+    - Parameters: mass, p, q (where p² + q² = 1)
 
 ### Remaining Metrics by Priority
 
-#### High Priority - Can be implemented without complex special functions (15 metrics)
+#### High Priority - Can be implemented without complex special functions (4 remaining)
 These are straightforward implementations that don't require Lambert W, Fourier series, or other complex functions:
 
-- **ChazyCurzonRot** (cylindrical) - Rotating Chazy-Curzon solution
-- **ErezRosenVar** (cylindrical) - Erez-Rosen with variable parameters
-- **Ernst** (cylindrical) - Ernst metric
-- **ErnstSchwarzschild** (cylindrical) - Ernst form of Schwarzschild
-- **StraightSpinningString** (cylindrical) - Straight spinning string
-- **RotDihole** (spherical) - Rotating dihole solution
-- **HalilsoyWave** (spherical) - Halilsoy wave metric
-- **SultanaDyer** (spherical) - Sultana-Dyer metric
-- **Glampedakis** (spherical) - Glampedakis metric
-- **HartleThorneGB** (spherical) - Hartle-Thorne with Gauss-Bonnet
 - **TeoSimpleWH** (spherical) - Teo simple wormhole
+  - **Status**: Complex implementation with many terms
 - **TeoWHl** (spherical) - Teo wormhole with parameter l
-- **PTD_AI, PTD_AII, PTD_AIII** - Plebanski-Demianski type A metrics (3 metrics)
-- **PTD_BI, PTD_BII, PTD_BIII** - Plebanski-Demianski type B metrics (3 metrics)
-- **PTD_C** - Plebanski-Demianski type C
+  - **Status**: Complex implementation with many terms
+- **HalilsoyWave** (cylindrical) - Halilsoy wave metric
+  - **Complexity**: Requires GSL Bessel functions (J0, J1)
+- **ErezRosenVar** (cylindrical) - Erez-Rosen with variable parameters
+  - **Status**: Has complex potential functions
 
 #### Medium Priority - Require special functions or complex calculations (13 metrics)
-These require Lambert W function, Fourier series, or other advanced mathematical functions:
+These require Lambert W function, Fourier series, Bessel functions, or other advanced mathematical functions:
+
+- **Glampedakis** (spherical) - Glampedakis metric
+  - **Complexity**: Requires calcKerr and calcGlampedakis helper functions with extensive calculations
+  - Important for LISA gravitational wave detection
+
+- **HartleThorneGB** (spherical) - Hartle-Thorne with Gauss-Bonnet
+  - **Complexity**: May require similar complexity to Glampedakis
 
 - **Kruskal** (spherical) - Maximal analytic extension of Schwarzschild
   - **Complexity**: Requires GSL Lambert W function (gsl_sf_lambert_W0)
