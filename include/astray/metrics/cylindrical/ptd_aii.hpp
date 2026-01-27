@@ -34,7 +34,7 @@ public:
       return termination_reason::spacetime_breakdown;
     
     // Check for singularity at z = b
-    if (std::abs(z - b) < static_cast<scalar_type>(1e-10))
+    if (std::abs(z - b) < consts::epsilon)
       return termination_reason::spacetime_breakdown;
     
     return termination_reason::none;

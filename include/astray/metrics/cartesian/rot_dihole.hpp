@@ -32,6 +32,26 @@ class rot_dihole : public metric<coordinate_system_type::cartesian, scalar_type,
 public:
   using consts = constants<scalar_type>;
 
+  __device__ termination_reason check_termination(const vector_type& position, [[maybe_unused]] const vector_type& direction) const override
+  {
+    const auto t = position[0];
+    const auto x = position[1];
+    const auto y = position[2];
+    const auto z = position[3];
+    
+    const auto omega = angular_velocity;
+    const auto sin_omega_t = std::sin(omega * t);
+    const auto cos_omega_t = std::cos(omega * t);
+    const auto r1 = std::sqrt(x * x + (y + sin_omega_t) * (y + sin_omega_t) + (z - cos_omega_t) * (z - cos_omega_t));
+    const auto r2 = std::sqrt(x * x + (y - sin_omega_t) * (y - sin_omega_t) + (z + cos_omega_t) * (z + cos_omega_t));
+    
+    // Check for singularities at the hole locations
+    if (r1 < consts::epsilon || r2 < consts::epsilon)
+      return termination_reason::spacetime_breakdown;
+    
+    return termination_reason::none;
+  }
+
   __device__ christoffel_symbols_type christoffel_symbols(const vector_type& position) const override
   {
     const auto t = position[0];

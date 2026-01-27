@@ -34,7 +34,7 @@ public:
     const auto y = position[3];
     
     // Check for singularity at x + y = 0
-    if (std::abs(x + y) < static_cast<scalar_type>(1e-10))
+    if (std::abs(x + y) < consts::epsilon)
       return termination_reason::spacetime_breakdown;
     
     return termination_reason::none;
