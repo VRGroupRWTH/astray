@@ -47,6 +47,9 @@ See the tests for more.
 ### UI Application
 See [Astrid](https://github.com/VRGroupRWTH/astrid) for a UI application built on Astray.
 
+### Acknowledgments
+Many of the metric implementations in this library are based on the [Motion4D library](https://github.com/tauzero7/Motion4D) by Thomas Mueller (tauzero7). We gratefully acknowledge this valuable reference implementation.
+
 ### Future Work
 - Fermi Walker transport.
 - Precompute the Christoffel symbols into a 4D image.
