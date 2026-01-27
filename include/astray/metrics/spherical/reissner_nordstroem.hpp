@@ -36,25 +36,27 @@ public:
 
   __device__ christoffel_symbols_type christoffel_symbols(const vector_type& position) const override
   {
-    const auto t1  = std::pow(position[1], 2);
-    const auto t2  = consts::schwarzschild_radius(mass) * position[1];
-    const auto t3  = std::pow(charge, 2);
+    const auto r   = position[1];
+    const auto r_sq = r * r;
+    const auto t1  = r_sq;
+    const auto t2  = consts::schwarzschild_radius(mass) * r;
+    const auto t3  = charge * charge;
     const auto t4  = consts::characteristic_length_scale(charge);
     const auto t5  = t1 - t2 + t4;
-    const auto t6  = std::pow(t1, 2);
+    const auto t6  = r_sq * r_sq;
     const auto t10 = consts::speed_of_light_squared;
     const auto t12 = t2 - static_cast<scalar_type>(2) * t4;
-    const auto t16 = static_cast<scalar_type>(1) / position[1];
+    const auto t16 = static_cast<scalar_type>(1) / r;
     const auto t20 = t16 / t5 * t12 / static_cast<scalar_type>(2);
     const auto t21 = t5 * t16;
     const auto t22 = std::sin(position[2]);
     const auto t24 = std::cos(position[2]);
     const auto t25 = static_cast<scalar_type>(1) / t22 * t24;
-    const auto t26 = std::pow(t22, 2);
+    const auto t26 = t22 * t22;
 
     christoffel_symbols_type symbols;
     symbols.setZero();
-    symbols(0, 0, 1) =  t5 / t6 / position[1] * t10 * t12 / static_cast<scalar_type>(2);
+    symbols(0, 0, 1) =  t5 / t6 / r * t10 * t12 / static_cast<scalar_type>(2);
     symbols(0, 1, 0) =  t20;
     symbols(1, 0, 0) =  t20;
     symbols(1, 1, 1) = -t20;

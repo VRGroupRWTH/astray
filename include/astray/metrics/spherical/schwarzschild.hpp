@@ -19,8 +19,12 @@ public:
   __device__ termination_reason       check_termination  (const vector_type& position, const vector_type& direction) const override
   {
     const auto rs = consts::schwarzschild_radius(mass);
-    if (position[1] < static_cast<scalar_type>(0) || 
-        static_cast<scalar_type>(std::pow(position[1], 2)) <= (static_cast<scalar_type>(1) + consts::epsilon) * static_cast<scalar_type>(std::pow(rs, 2)))
+    const auto r = position[1];
+    if (r < static_cast<scalar_type>(0))
+      return termination_reason::spacetime_breakdown;
+    const auto r_sq = r * r;
+    const auto rs_sq = rs * rs;
+    if (r_sq <= (static_cast<scalar_type>(1) + consts::epsilon) * rs_sq)
       return termination_reason::spacetime_breakdown;
     return termination_reason::none;
   }
@@ -31,14 +35,15 @@ public:
     const auto r     = position[1];
     const auto theta = position[2];
     const auto t1    = r - rs;
-    const auto t2    = static_cast<scalar_type>(std::pow(r, 2));
+    const auto r_sq  = r * r;
+    const auto t2    = r_sq;
     const auto t6    = consts::speed_of_light_squared;
     const auto t10   = static_cast<scalar_type>(1) / r;
     const auto t14   = t10 / t1 * rs * static_cast<scalar_type>(0.5);
     const auto t15   = std::sin(theta);
     const auto t17   = std::cos(theta);
     const auto t18   = static_cast<scalar_type>(1) / t15 * t17;
-    const auto t19   = static_cast<scalar_type>(std::pow(t15, 2));
+    const auto t19   = t15 * t15;
 
     christoffel_symbols_type symbols;
     symbols.setZero();

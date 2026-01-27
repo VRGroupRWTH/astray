@@ -47,7 +47,9 @@ __device__ __host__ constexpr void convert    (type& value)
   {
     if      constexpr (target == coordinate_system_type::cylindrical)
     {
-      const scalar rho = std::sqrt (static_cast<scalar>(std::pow(value[1], 2)) + static_cast<scalar>(std::pow(value[2], 2)));
+      const scalar x_sq = value[1] * value[1];
+      const scalar y_sq = value[2] * value[2];
+      const scalar rho = std::sqrt (x_sq + y_sq);
       const scalar phi = std::atan2(value[2], value[1]);
 
       value[1] = rho;
@@ -57,10 +59,10 @@ __device__ __host__ constexpr void convert    (type& value)
     }
     else if constexpr (target == coordinate_system_type::spherical)
     {
-      const scalar r     = std::sqrt (
-        static_cast<scalar>(std::pow(value[1], 2)) + 
-        static_cast<scalar>(std::pow(value[2], 2)) + 
-        static_cast<scalar>(std::pow(value[3], 2)));
+      const scalar x_sq = value[1] * value[1];
+      const scalar y_sq = value[2] * value[2];
+      const scalar z_sq = value[3] * value[3];
+      const scalar r     = std::sqrt (x_sq + y_sq + z_sq);
       const scalar theta = std::acos (value[3] / r);
       const scalar phi   = std::atan2(value[2], value[1]);
 
@@ -87,11 +89,11 @@ __device__ __host__ constexpr void convert    (type& value)
     {
       wrap_angles<source>(value);
 
-      const scalar r     = std::sqrt(
-        static_cast<scalar>(std::pow(value[1], 2)) +
-        static_cast<scalar>(std::pow(value[3], 2)));
-      const scalar theta = std::atan2(value[1], value[3]);
-      const scalar phi   = value[2];
+      const scalar rho_sq = value[1] * value[1];
+      const scalar z_sq   = value[3] * value[3];
+      const scalar r      = std::sqrt(rho_sq + z_sq);
+      const scalar theta  = std::atan2(value[1], value[3]);
+      const scalar phi    = value[2];
 
       value[1] = r;
       value[2] = theta;
@@ -139,9 +141,9 @@ __device__ __host__ constexpr void convert    (type& value, const scalar free_pa
     {
       wrap_angles<source>(value);
 
-      const scalar sq_r2_p_a2 = std::sqrt(
-        static_cast<scalar>(std::pow(value[1]      , 2)) + 
-        static_cast<scalar>(std::pow(free_parameter, 2)));
+      const scalar r_sq   = value[1] * value[1];
+      const scalar a_sq   = free_parameter * free_parameter;
+      const scalar sq_r2_p_a2 = std::sqrt(r_sq + a_sq);
 
       const scalar x = sq_r2_p_a2 * std::sin(value[2]) * std::cos(value[3]);
       const scalar y = sq_r2_p_a2 * std::sin(value[2]) * std::sin(value[3]);
@@ -166,13 +168,14 @@ __device__ __host__ constexpr void convert    (type& value, const scalar free_pa
   {
     if      constexpr (target == coordinate_system_type::boyer_lindquist)
     {
-      const scalar w = 
-        static_cast<scalar>(std::pow(value[1]      , 2)) + 
-        static_cast<scalar>(std::pow(value[2]      , 2)) + 
-        static_cast<scalar>(std::pow(value[3]      , 2)) - 
-        static_cast<scalar>(std::pow(free_parameter, 2));
+      const scalar x_sq = value[1] * value[1];
+      const scalar y_sq = value[2] * value[2];
+      const scalar z_sq = value[3] * value[3];
+      const scalar a_sq = free_parameter * free_parameter;
+      const scalar w = x_sq + y_sq + z_sq - a_sq;
 
-      const scalar r     = std::sqrt (static_cast<scalar>(0.5) * (w + std::sqrt(static_cast<scalar>(std::pow(w, 2)) + static_cast<scalar>(4) * static_cast<scalar>(std::pow(free_parameter, 2)) * static_cast<scalar>(std::pow(value[3], 2)))));
+      const scalar w_sq = w * w;
+      const scalar r    = std::sqrt (static_cast<scalar>(0.5) * (w + std::sqrt(w_sq + static_cast<scalar>(4) * a_sq * z_sq)));
       const scalar theta = std::acos (value[3] / r);
       const scalar phi   = std::atan2(value[2], value[1]);
 
@@ -184,10 +187,12 @@ __device__ __host__ constexpr void convert    (type& value, const scalar free_pa
     }
     else if constexpr (target == coordinate_system_type::prolate_spheroidal)
     {
-      const scalar x_squared        = static_cast<scalar>(std::pow(value[1], 2));
-      const scalar y_squared        = static_cast<scalar>(std::pow(value[2], 2));
-      const scalar first_component  = std::sqrt(x_squared + y_squared + static_cast<scalar>(std::pow(value[3] + free_parameter, 2)));
-      const scalar second_component = std::sqrt(x_squared + y_squared + static_cast<scalar>(std::pow(value[3] - free_parameter, 2)));
+      const scalar x_squared        = value[1] * value[1];
+      const scalar y_squared        = value[2] * value[2];
+      const scalar z_plus_a         = value[3] + free_parameter;
+      const scalar z_minus_a        = value[3] - free_parameter;
+      const scalar first_component  = std::sqrt(x_squared + y_squared + z_plus_a * z_plus_a);
+      const scalar second_component = std::sqrt(x_squared + y_squared + z_minus_a * z_minus_a);
       const scalar _2a              = 2 * free_parameter;
 
       const scalar sigma = (first_component + second_component) / _2a;
@@ -220,7 +225,9 @@ __device__ __host__ constexpr void convert    (type& value, const scalar free_pa
     {
       wrap_angles<source>(value);
 
-      const scalar common = free_parameter * std::sqrt((static_cast<scalar>(std::pow(value[1], 2)) - static_cast<scalar>(1)) * (static_cast<scalar>(1) - static_cast<scalar>(std::pow(value[2], 2))));
+      const scalar s_sq   = value[1] * value[1];
+      const scalar t_sq   = value[2] * value[2];
+      const scalar common = free_parameter * std::sqrt((s_sq - static_cast<scalar>(1)) * (static_cast<scalar>(1) - t_sq));
       const scalar x      = common * std::cos(value[3]);
       const scalar y      = common * std::sin(value[3]);
       const scalar z      = free_parameter * value[1] * value[2];
@@ -376,7 +383,9 @@ __device__ __host__ constexpr void convert_ray(type& value, const scalar free_pa
       const scalar& r = value.position[1];
       const scalar& t = value.position[2];
       const scalar& p = value.position[3];
-      const scalar  k = std::sqrt(static_cast<scalar>(std::pow(free_parameter, 2)) + static_cast<scalar>(std::pow(r, 2)));
+      const scalar  a_sq = free_parameter * free_parameter;
+      const scalar  r_sq = r * r;
+      const scalar  k = std::sqrt(a_sq + r_sq);
 
       matrix44<scalar> transform;
       transform << 
@@ -409,7 +418,9 @@ __device__ __host__ constexpr void convert_ray(type& value, const scalar free_pa
       const scalar& r = value.position[1];
       const scalar& t = value.position[2];
       const scalar& p = value.position[3];
-      const scalar  k = std::sqrt(static_cast<scalar>(std::pow(free_parameter, 2)) + static_cast<scalar>(std::pow(r, 2)));
+      const scalar  a_sq = free_parameter * free_parameter;
+      const scalar  r_sq = r * r;
+      const scalar  k = std::sqrt(a_sq + r_sq);
 
       matrix44<scalar> transform;
       transform << 
@@ -429,7 +440,9 @@ __device__ __host__ constexpr void convert_ray(type& value, const scalar free_pa
       const scalar& t = value.position[2];
       const scalar& p = value.position[3];
       const scalar& a = free_parameter;
-      const scalar  k = std::sqrt(-(static_cast<scalar>(std::pow(s, 2)) - static_cast<scalar>(1)) * (static_cast<scalar>(std::pow(t, 2)) - static_cast<scalar>(1)));
+      const scalar  s_sq = s * s;
+      const scalar  t_sq = t * t;
+      const scalar  k = std::sqrt(-(s_sq - static_cast<scalar>(1)) * (t_sq - static_cast<scalar>(1)));
 
       matrix44<scalar> transform;
       transform << 
@@ -463,7 +476,9 @@ __device__ __host__ constexpr void convert_ray(type& value, const scalar free_pa
       const scalar& t = value.position[2];
       const scalar& p = value.position[3];
       const scalar& a = free_parameter;
-      const scalar  k = std::sqrt(-(static_cast<scalar>(std::pow(s, 2)) - 1) * (static_cast<scalar>(std::pow(t, 2)) - 1));
+      const scalar  s_sq = s * s;
+      const scalar  t_sq = t * t;
+      const scalar  k = std::sqrt(-(s_sq - static_cast<scalar>(1)) * (t_sq - static_cast<scalar>(1)));
 
       matrix44<scalar> transform;
       transform << 
