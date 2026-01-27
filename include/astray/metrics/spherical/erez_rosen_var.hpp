@@ -152,7 +152,8 @@ public:
   // Mass parameter
   scalar_type mass = static_cast<scalar_type>(1);
   
-  // Deformation parameter
+  // Deformation parameter (currently not used in standard implementation)
+  // Can be used for extended versions with quadrupole deformation
   scalar_type q = static_cast<scalar_type>(0.1);
 };
 }

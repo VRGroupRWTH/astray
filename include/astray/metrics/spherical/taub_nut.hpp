@@ -53,8 +53,7 @@ public:
     
     const auto r_sq = r * r;
     const auto l_sq = l * l;
-    const auto Sigma_sq = r_sq + l_sq;
-    const auto Sigma = Sigma_sq;
+    const auto Sigma = r_sq + l_sq;
     const auto Delta = r_sq - static_cast<scalar_type>(2) * M * r - l_sq;
     
     const auto st = std::sin(theta);
@@ -73,12 +72,12 @@ public:
     symbols(0, 1, 0) = (-static_cast<scalar_type>(2) * r * Delta + (static_cast<scalar_type>(-2) * M + static_cast<scalar_type>(2) * r) * Sigma)
         / (static_cast<scalar_type>(2) * Sigma * Delta);
     
-    symbols(0, 2, 0) = -static_cast<scalar_type>(2) * l_sq * Delta / (Sigma_sq * tan_theta);
-    symbols(0, 2, 3) = l * Delta / (Sigma_sq * st);
+    symbols(0, 2, 0) = -static_cast<scalar_type>(2) * l_sq * Delta / (Sigma * Sigma * tan_theta);
+    symbols(0, 2, 3) = l * Delta / (Sigma * Sigma * st);
     
     symbols(0, 3, 1) = l * (-static_cast<scalar_type>(2) * r * Delta + (static_cast<scalar_type>(-2) * M + static_cast<scalar_type>(2) * r) * Sigma)
         * Delta * ct / std::pow(Sigma, static_cast<scalar_type>(3));
-    symbols(0, 3, 2) = -l * Delta * st / Sigma_sq;
+    symbols(0, 3, 2) = -l * Delta * st / (Sigma * Sigma);
     
     symbols(1, 0, 0) = symbols(0, 1, 0);
     
@@ -98,9 +97,9 @@ public:
     
     symbols(2, 2, 1) = -r * Delta / Sigma;
     
-    symbols(2, 3, 0) = l * (-static_cast<scalar_type>(4) * l_sq * Delta * ct_sq + Sigma_sq * st_sq - static_cast<scalar_type>(2) * Sigma_sq)
-        / (Sigma_sq * st);
-    symbols(2, 3, 3) = (static_cast<scalar_type>(2) * l_sq * Delta + Sigma_sq) / (Sigma_sq * tan_theta);
+    symbols(2, 3, 0) = l * (-static_cast<scalar_type>(4) * l_sq * Delta * ct_sq + Sigma * Sigma * st_sq - static_cast<scalar_type>(2) * Sigma * Sigma)
+        / (Sigma * Sigma * st);
+    symbols(2, 3, 3) = (static_cast<scalar_type>(2) * l_sq * Delta + Sigma * Sigma) / (Sigma * Sigma * tan_theta);
     
     symbols(3, 0, 1) = symbols(0, 3, 1);
     symbols(3, 0, 2) = symbols(0, 3, 2);
@@ -113,9 +112,9 @@ public:
     
     symbols(3, 3, 1) = Delta * (-static_cast<scalar_type>(8) * l_sq * r * Delta * ct_sq 
         + static_cast<scalar_type>(4) * l_sq * (static_cast<scalar_type>(-2) * M + static_cast<scalar_type>(2) * r) * Sigma * ct_sq
-        + static_cast<scalar_type>(2) * r * Sigma_sq * ct_sq - static_cast<scalar_type>(2) * r * Sigma_sq)
+        + static_cast<scalar_type>(2) * r * Sigma * Sigma * ct_sq - static_cast<scalar_type>(2) * r * Sigma * Sigma)
         / (static_cast<scalar_type>(2) * std::pow(Sigma, static_cast<scalar_type>(3)));
-    symbols(3, 3, 2) = (-static_cast<scalar_type>(4) * l_sq * Delta - Sigma_sq) * st * ct / Sigma_sq;
+    symbols(3, 3, 2) = (-static_cast<scalar_type>(4) * l_sq * Delta - Sigma * Sigma) * st * ct / (Sigma * Sigma);
     
     return symbols;
   }

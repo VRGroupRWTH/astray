@@ -36,17 +36,15 @@ public:
     const auto A = acceleration;
     const auto m = mass;
     
-    const auto x_sq = x * x;
-    const auto y_sq = y * y;
     const auto mA = m * A;
     
     const auto t2 = static_cast<scalar_type>(1) / (x + y);
-    const auto t3 = x_sq;
+    const auto t3 = x * x;
     const auto t4 = mA;
     const auto t6 = t4 * t3 * x;
     const auto t8 = static_cast<scalar_type>(-1) + t3 + static_cast<scalar_type>(2) * t6;
     const auto t9 = t2 * t8;
-    const auto t10 = y_sq;
+    const auto t10 = y * y;
     const auto t12 = t4 * t10 * y;
     const auto t14 = static_cast<scalar_type>(1) - t10 + static_cast<scalar_type>(2) * t12;
     const auto t15 = t9 * t14;

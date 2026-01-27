@@ -44,11 +44,9 @@ public:
     const auto st    = std::sin(theta);
     const auto ct    = std::cos(theta);
     const auto st_sq = st * st;
-    const auto st_3  = st * st_sq;
     const auto st_4  = st_sq * st_sq;
-    const auto ct_sq = ct * ct;
     
-    const auto r_sq = pow(b0_sq + l_sq, static_cast<scalar_type>(2));
+    const auto r_sq = std::pow(b0_sq + l_sq, static_cast<scalar_type>(2));
     const auto invr3 = std::pow(b0_sq + l_sq, static_cast<scalar_type>(-3));
     const auto t1 = std::pow(b0_sq + l_sq, static_cast<scalar_type>(-0.5));
     const auto t2 = std::pow(b0_sq + l_sq, static_cast<scalar_type>(-3.5));

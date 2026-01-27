@@ -161,19 +161,9 @@ All high-priority metrics have been implemented!
 #### Medium Priority - Require special functions or complex calculations (10 metrics remaining)
 These require Lambert W function, Fourier series, Bessel functions, or other advanced mathematical functions:
 
-- **Glampedakis** (spherical) - Glampedakis metric
-  - **Complexity**: Requires calcKerr and calcGlampedakis helper functions with extensive calculations
-  - Important for LISA gravitational wave detection
-
-- **HartleThorneGB** (spherical) - Hartle-Thorne with Gauss-Bonnet
-  - **Complexity**: May require similar complexity to Glampedakis
-
 - **Kruskal** (spherical) - Maximal analytic extension of Schwarzschild
   - **Complexity**: Requires GSL Lambert W function (gsl_sf_lambert_W0)
   - Coordinates cover full Schwarzschild spacetime including both exterior and interior regions
-
-- **TaubNUT** (spherical) - ✅ **COMPLETED** - `include/astray/metrics/spherical/taub_nut.hpp`
-  - Rotating solution with NUT parameter (gravitomagnetic monopole)
 
 - **SchwarzschildTortoise** (spherical) - Tortoise coordinate form
   - **Complexity**: Requires Lambert W function for coordinate transformation
@@ -187,10 +177,6 @@ These require Lambert W function, Fourier series, Bessel functions, or other adv
 
 - **HalilsoyWave** (cylindrical) - Halilsoy wave metric
   - **Complexity**: Requires GSL Bessel functions (J0, J1)
-
-- **TomimatsuSato** (cylindrical) - Tomimatsu-Sato metric
-  - **Complexity**: Very complex with extensive helper functions and coordinate-dependent expressions
-  - Reference: V.S. Manko, Progress of Theoretical Physics 127, 1057 (2012)
 
 - **PlaneGravWave** (cartesian) - Plane gravitational wave (sandwich wave)
   - **Complexity**: Requires Fourier series expansion for wave functions p(u) and q(u)
@@ -207,11 +193,9 @@ These require Lambert W function, Fourier series, Bessel functions, or other adv
   - **Complexity**: Very complex with extensive helper functions and coordinate-dependent expressions
   - Reference: V.S. Manko, Progress of Theoretical Physics 127, 1057 (2012)
 
-- **Pravda_C** (cartesian) - ✅ **COMPLETED** - `include/astray/metrics/cartesian/pravda_c.hpp`
-  - Accelerating black holes metric
-
 - **Pravda_C_Can** (cylindrical) - Pravda C in canonical coordinates
-  - **Complexity**: Canonical coordinate form
+  - **Complexity**: Canonical coordinate form with complex helper functions
+
 
 ## Implementation Guidelines
 
