@@ -22,7 +22,9 @@ public:
   }
   __device__ termination_reason       check_termination          (const vector_type& position, const vector_type& direction) const override
   {
-    const auto event_horizon = mass + std::sqrt(static_cast<scalar_type>(std::pow(mass, 2)) - static_cast<scalar_type>(std::pow(angular_momentum, 2)));
+    const auto mass_sq = mass * mass;
+    const auto ang_mom_sq = angular_momentum * angular_momentum;
+    const auto event_horizon = mass + std::sqrt(mass_sq - ang_mom_sq);
     if (position[1] < static_cast<scalar_type>(0) || position[1] <= (static_cast<scalar_type>(1) + consts::epsilon) * event_horizon)
       return termination_reason::spacetime_breakdown;
     return termination_reason::none;
@@ -30,28 +32,34 @@ public:
 
   __device__ christoffel_symbols_type christoffel_symbols        (const vector_type& position) const override
   {
-    const auto t1   = static_cast<scalar_type>(std::pow(position[1], 2));
+    const auto r_sq = position[1] * position[1];
+    const auto t1   = r_sq;
     const auto t2   = mass * position[1];
-    const auto t4   = static_cast<scalar_type>(std::pow(angular_momentum, 2));
+    const auto a_sq = angular_momentum * angular_momentum;
+    const auto t4   = a_sq;
     const auto t5   = t1 - static_cast<scalar_type>(2) * t2 + t4;
     const auto t6   = std::cos(position[2]);
-    const auto t7   = static_cast<scalar_type>(std::pow(t6, 2));
+    const auto t6_sq = t6 * t6;
+    const auto t7   = t6_sq;
     const auto t8   = t4 * t7;
     const auto t9   = t1 + t8;
-    const auto t10  = static_cast<scalar_type>(std::pow(t9, 2));
+    const auto t9_sq = t9 * t9;
+    const auto t10  = t9_sq;
     const auto t12  = static_cast<scalar_type>(1) / t10 / t9;
     const auto t14  = -t1 + t8;
     const auto t20  = std::sin(position[2]);
     const auto t21  = t4 * t6 * t20;
     const auto t24  = t4 + t1;
     const auto t26  = static_cast<scalar_type>(1) / t9;
-    const auto t28  = static_cast<scalar_type>(std::pow(t4, 2));
+    const auto a_sq_sq = a_sq * a_sq;
+    const auto t28  = a_sq_sq;
     const auto t29  = t28 * t7;
     const auto t30  = t1 * t4;
     const auto t31  = t30 * t7;
     const auto t32  = t4 * mass;
     const auto t35  = static_cast<scalar_type>(2) * t32 * position[1] * t7;
-    const auto t36  = static_cast<scalar_type>(std::pow(t1, 2));
+    const auto r_sq_sq = r_sq * r_sq;
+    const auto t36  = r_sq_sq;
     const auto t37  = t1 * position[1];
     const auto t38  = mass * t37;
     const auto t41  = static_cast<scalar_type>(1) / (t29 + t31 + t30 - t35 + t36 - static_cast<scalar_type>(2) * t38);
@@ -73,7 +81,8 @@ public:
     const auto t77  = t26 * t4 * t62;
     const auto t78  = t26 * position[1];
     const auto t85  = (t29 - t31 - t30 - static_cast<scalar_type>(3) * t36) * mass * angular_momentum * t58 * t26 * t41;
-    const auto t87  = static_cast<scalar_type>(std::pow(t7, 2));
+    const auto t6_sq_sq = t6_sq * t6_sq;
+    const auto t87  = t6_sq_sq;
     const auto t88  = position[1] * t28 * t87;
     const auto t89  = mass * t28;
     const auto t90  = t89 * t7;
