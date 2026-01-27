@@ -104,7 +104,7 @@ public:
     symbols(0, 3, 2) =  t66;
     symbols(1, 0, 0) = -t43;
     symbols(1, 0, 3) = -t45;
-    symbols(1, 1, 1) = -t68 * (t69 - position[1] * t4 + t8 * position[1] - t8 * mass);
+    symbols(1, 1, 1) = -t68 * (t69 - position[1] * a_sq + t8 * position[1] - t8 * mass);
     symbols(1, 1, 2) =  t68 * t21;
     symbols(1, 2, 1) = -t77;
     symbols(1, 2, 2) =  t78;
@@ -125,9 +125,9 @@ public:
     symbols(3, 2, 0) = -t112;
     symbols(3, 2, 3) =  t120;
     symbols(3, 3, 1) =  t5 * t58 * (t97 + t95 + t88 - t96 + t92 + t90 - t91) * t12;
-    symbols(3, 3, 2) = -t62 * (t36 * t1 + static_cast<scalar_type>(2) * t126 * t7 + t129 * t87 + t126
-      + static_cast<scalar_type>(2) * t129 * t7   + t28 * t4 * t87 
-      + static_cast<scalar_type>(4) * t38  * t4   - static_cast<scalar_type>(4) * t38 * t8 
+    symbols(3, 3, 2) = -t62 * (r_sq_sq * r_sq + static_cast<scalar_type>(2) * t126 * t6_sq + t129 * t6_sq_sq + t126
+      + static_cast<scalar_type>(2) * t129 * t6_sq   + a_sq_sq * a_sq * t6_sq_sq 
+      + static_cast<scalar_type>(4) * t38  * a_sq   - static_cast<scalar_type>(4) * t38 * t8 
       - static_cast<scalar_type>(2) * t2   * t113 + static_cast<scalar_type>(2) * t89 * position[1]) * t12;
     return symbols;
   }
