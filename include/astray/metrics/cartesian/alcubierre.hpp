@@ -53,14 +53,14 @@ public:
     const auto t25 = df[3];
     const auto t27 = t8 * v_sq;
     const auto t28 = t27 * t14;
-    const auto t30 = velocity * t23;
+    const auto t30 = velocity * t23       / static_cast<scalar_type>(2);
     const auto t31 = velocity * t25;
     const auto t32 = t31                  / static_cast<scalar_type>(2);
     const auto t35 = t27 * f * t23       / static_cast<scalar_type>(2);
     const auto t38 = (v_sq * f_sq + consts::speed_of_light_squared) * t8;
-    const auto t40 = t30 * t38            / static_cast<scalar_type>(2);
+    const auto t40 = t30 * t38;
     const auto t43 = t27 * f * t25       / static_cast<scalar_type>(2);
-    const auto t45 = t31 * t38            / static_cast<scalar_type>(2);
+    const auto t45 = t32 * t38;
     const auto t46 = velocity * t8;
     const auto t49 = t46 * t23            / static_cast<scalar_type>(2);
     const auto t51 = t46 * t25            / static_cast<scalar_type>(2);
@@ -73,7 +73,7 @@ public:
     symbols(0, 0, 3) = -t22 * t25;
     symbols(0, 1, 0) = -t28;
     symbols(0, 1, 1) = -t10;
-    symbols(0, 1, 2) =  t30 / static_cast<scalar_type>(2);
+    symbols(0, 1, 2) =  t30;
     symbols(0, 1, 3) =  t32;
     symbols(0, 2, 0) = -t35;
     symbols(0, 2, 1) = -t40;
@@ -81,7 +81,7 @@ public:
     symbols(0, 3, 1) = -t45;
     symbols(1, 0, 0) = -t28;
     symbols(1, 0, 1) = -t10;
-    symbols(1, 0, 2) =  t30 / static_cast<scalar_type>(2);
+    symbols(1, 0, 2) =  t30;
     symbols(1, 0, 3) =  t32;
     symbols(1, 1, 0) =  t46 * t6;
     symbols(1, 1, 1) =  t28;
