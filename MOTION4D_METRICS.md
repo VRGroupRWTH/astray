@@ -127,6 +127,28 @@ Original Motion4D library by Thomas Mueller (tauzero7): https://github.com/tauze
     - Parameters: R (bubble size), dR (transition width), vs (bubble velocity)
 
 27. **TeoWHl** (spherical) - `include/astray/metrics/spherical/teo_wormhole.hpp`
+    - Rotating traversable wormhole metric with customizable potentials
+    - Parameters: b0 (throat radius), custom functions N(l), K(l), r(l), ω(l)
+
+28. **TaubNUT** (spherical) - `include/astray/metrics/spherical/taub_nut.hpp`
+    - Taub-NUT metric with gravitomagnetic monopole charge
+    - Parameters: mass M, NUT parameter l
+    - Reference: Bini et al, Class. Quantum Grav. 19, 5481 (2002)
+
+29. **ErezRosenVar** (spherical) - `include/astray/metrics/spherical/erez_rosen_var.hpp`
+    - Static axisymmetric solution with variable deformation parameter
+    - Parameters: mass M, deformation parameter q
+    - Uses potentials ψ, γ, and Δ
+
+30. **TeoSimpleWH** (spherical) - `include/astray/metrics/spherical/teo_simple_wormhole.hpp`
+    - Simple rotating wormhole with throat at l=0
+    - Parameter: b0 (throat radius)
+
+31. **Pravda_C** (cartesian) - `include/astray/metrics/cartesian/pravda_c.hpp`
+    - C-metric representing uniformly accelerating black holes
+    - Parameters: acceleration A, mass m
+
+27. **TeoWHl** (spherical) - `include/astray/metrics/spherical/teo_wormhole.hpp`
     - Teo wormhole metric with parameter l (rotating traversable wormhole)
     - Uses potentials N(l), K(l), r(l), ω(l) that can be customized
     - Standard potentials: N=1, K=1, r=√(l²+b₀²), ω=b₀²/(2(l²+b₀²)^(3/2))
