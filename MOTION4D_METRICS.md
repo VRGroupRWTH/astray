@@ -7,7 +7,7 @@ Original Motion4D library by Thomas Mueller (tauzero7): https://github.com/tauze
 
 ## Implementation Summary
 
-### Completed Metrics (30/41 = 73%)
+### Completed Metrics (31/41 = 76%)
 
 1. **Kasner** (cartesian) - `include/astray/metrics/cartesian/kasner.hpp`
    - Anisotropic cosmological solution
@@ -148,12 +148,17 @@ Original Motion4D library by Thomas Mueller (tauzero7): https://github.com/tauze
     - Throat at l=0 with radius parameter b₀
     - Reference: Edward Teo, Phys. Rev. D 58, 024014 (1998)
 
+31. **Pravda_C** (cartesian) - `include/astray/metrics/cartesian/pravda_c.hpp`
+    - Pravda C-metric representing accelerating black holes
+    - Custom coordinates (t, x, y, phi)
+    - Parameters: acceleration (A), mass (m)
+
 ### Remaining Metrics by Priority
 
 #### High Priority - Can be implemented without complex special functions (0 remaining)
 All high-priority metrics have been implemented!
 
-#### Medium Priority - Require special functions or complex calculations (11 metrics remaining)
+#### Medium Priority - Require special functions or complex calculations (10 metrics remaining)
 These require Lambert W function, Fourier series, Bessel functions, or other advanced mathematical functions:
 
 - **Glampedakis** (spherical) - Glampedakis metric
@@ -199,12 +204,13 @@ These require Lambert W function, Fourier series, Bessel functions, or other adv
   - Important for LISA gravitational wave detection
 
 - **TomimatsuSato** (cylindrical) - Tomimatsu-Sato metric
-  - **Complexity**: Complex coordinate-dependent expressions
+  - **Complexity**: Very complex with extensive helper functions and coordinate-dependent expressions
+  - Reference: V.S. Manko, Progress of Theoretical Physics 127, 1057 (2012)
 
-- **Pravda_C** (various) - Pravda metric type C
-  - **Complexity**: Specialized algebraic type
+- **Pravda_C** (cartesian) - ✅ **COMPLETED** - `include/astray/metrics/cartesian/pravda_c.hpp`
+  - Accelerating black holes metric
 
-- **Pravda_C_Can** (various) - Pravda C in canonical form
+- **Pravda_C_Can** (cylindrical) - Pravda C in canonical coordinates
   - **Complexity**: Canonical coordinate form
 
 ## Implementation Guidelines
