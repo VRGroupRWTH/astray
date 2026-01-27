@@ -7,7 +7,7 @@ Original Motion4D library by Thomas Mueller (tauzero7): https://github.com/tauze
 
 ## Implementation Summary
 
-### Completed Metrics (24/41 = 59%)
+### Completed Metrics (26/41 = 63%)
 
 1. **Kasner** (cartesian) - `include/astray/metrics/cartesian/kasner.hpp`
    - Anisotropic cosmological solution
@@ -117,6 +117,14 @@ Original Motion4D library by Thomas Mueller (tauzero7): https://github.com/tauze
 24. **ChazyCurzonRot** (cylindrical) - `include/astray/metrics/cylindrical/chazy_curzon_rot.hpp`
     - Rotating generalization of Curzon metric
     - Parameters: mass, p, q (where p² + q² = 1)
+
+25. **StraightSpinningString** (cylindrical) - `include/astray/metrics/cylindrical/straight_spinning_string.hpp`
+    - Infinite spinning cosmic string metric
+    - Parameters: a (string parameter), k (rotation parameter)
+
+26. **AlcubierreSimple** (cartesian) - `include/astray/metrics/cartesian/alcubierre_simple.hpp`
+    - Simplified Alcubierre warp drive with smooth bubble transitions
+    - Parameters: R (bubble size), dR (transition width), vs (bubble velocity)
 
 ### Remaining Metrics by Priority
 
