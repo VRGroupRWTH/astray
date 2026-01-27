@@ -13,15 +13,15 @@ struct transform
   using quaternion_type = quaternion<scalar_type>;
   using angle_axis_type = angle_axis<scalar_type>;
 
-  vector_type right              () const
+  __device__ __host__ inline vector_type right              () const
   {
     return rotation * vector_type::UnitX();
   }
-  vector_type up                 () const
+  __device__ __host__ inline vector_type up                 () const
   {
     return rotation * vector_type::UnitY();
   }
-  vector_type forward            () const
+  __device__ __host__ inline vector_type forward            () const
   {
     return rotation * vector_type::UnitZ();
   }

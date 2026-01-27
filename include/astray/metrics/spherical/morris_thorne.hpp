@@ -3,6 +3,7 @@
 #include <cmath>
 
 #include <astray/core/metric.hpp>
+#include <astray/math/ipow.hpp>
 
 namespace ast::metrics
 {
@@ -15,24 +16,25 @@ class morris_thorne : public metric<coordinate_system_type::spherical, scalar_ty
 public:
   __device__ christoffel_symbols_type christoffel_symbols(const vector_type& position) const override
   {
-    const auto t1  = static_cast<scalar_type>(std::pow(position[1]  , 2));
-    const auto t2  = static_cast<scalar_type>(std::pow(throat_radius, 2));
-    const auto t5  = static_cast<scalar_type>(1) / (t1 + t2) * position[1];
+    const auto r   = position[1];
+    const auto r_sq = ipow<2>(r);
+    const auto b_sq = ipow<2>(throat_radius);
+    const auto t5  = static_cast<scalar_type>(1) / (r_sq + b_sq) * r;
     const auto t6  = std::sin(position[2]);
     const auto t8  = std::cos(position[2]);
     const auto t9  = static_cast<scalar_type>(1) / t6 * t8;
-    const auto t10 = static_cast<scalar_type>(std::pow(t6, 2));
+    const auto t6_sq = ipow<2>(t6);
 
     christoffel_symbols_type symbols;
     symbols.setZero();
     symbols(1, 2, 2) = t5;
     symbols(1, 3, 3) = t5;
     symbols(2, 1, 2) = t5;
-    symbols(2, 2, 1) = -position[1];
+    symbols(2, 2, 1) = -r;
     symbols(2, 3, 3) = t9;
     symbols(3, 1, 3) = t5;
     symbols(3, 2, 3) = t9;
-    symbols(3, 3, 1) = -position[1] * t10;
+    symbols(3, 3, 1) = -r * t6_sq;
     symbols(3, 3, 2) = -t6 * t8;
     return symbols;
   }

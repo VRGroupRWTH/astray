@@ -40,11 +40,15 @@ public:
         {
           value_type dydt;
           dydt.head(4) = y.tail(4);
-          auto christoffel_symbols = metric.christoffel_symbols(y.head(4));
+          const auto christoffel_symbols = metric.christoffel_symbols(y.head(4));
+          const auto& velocity = y.tail(4);
           for (auto i = 0; i < 4; ++i)
+          {
+            const auto vel_i = velocity[i];
             for (auto j = 0; j < 4; ++j)
               for (auto k = 0; k < 4; ++k)
-                dydt.tail(4)[k] -= christoffel_symbols(i, j, k) * y.tail(4)[i] * y.tail(4)[j];
+                dydt.tail(4)[k] -= christoffel_symbols(i, j, k) * vel_i * velocity[j];
+          }
           return dydt;
         }
       }, 
