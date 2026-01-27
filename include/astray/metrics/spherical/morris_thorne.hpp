@@ -3,6 +3,7 @@
 #include <cmath>
 
 #include <astray/core/metric.hpp>
+#include <astray/math/ipow.hpp>
 
 namespace ast::metrics
 {
@@ -16,15 +17,15 @@ public:
   __device__ christoffel_symbols_type christoffel_symbols(const vector_type& position) const override
   {
     const auto r   = position[1];
-    const auto r_sq = r * r;
+    const auto r_sq = ipow<2>(r);
     const auto t1  = r_sq;
-    const auto b_sq = throat_radius * throat_radius;
+    const auto b_sq = ipow<2>(throat_radius);
     const auto t2  = b_sq;
     const auto t5  = static_cast<scalar_type>(1) / (t1 + t2) * r;
     const auto t6  = std::sin(position[2]);
     const auto t8  = std::cos(position[2]);
     const auto t9  = static_cast<scalar_type>(1) / t6 * t8;
-    const auto t10 = t6 * t6;
+    const auto t10 = ipow<2>(t6);
 
     christoffel_symbols_type symbols;
     symbols.setZero();

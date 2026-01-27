@@ -4,6 +4,7 @@
 
 #include <astray/core/metric.hpp>
 #include <astray/math/constants.hpp>
+#include <astray/math/ipow.hpp>
 
 namespace ast::metrics
 {
@@ -37,13 +38,13 @@ public:
   __device__ christoffel_symbols_type christoffel_symbols(const vector_type& position) const override
   {
     const auto r   = position[1];
-    const auto r_sq = r * r;
+    const auto r_sq = ipow<2>(r);
     const auto t1  = r_sq;
     const auto t2  = consts::schwarzschild_radius(mass) * r;
-    const auto t3  = charge * charge;
+    const auto t3  = ipow<2>(charge);
     const auto t4  = consts::characteristic_length_scale(charge);
     const auto t5  = t1 - t2 + t4;
-    const auto t6  = r_sq * r_sq;
+    const auto t6  = ipow<2>(r_sq);
     const auto t10 = consts::speed_of_light_squared;
     const auto t12 = t2 - static_cast<scalar_type>(2) * t4;
     const auto t16 = static_cast<scalar_type>(1) / r;
@@ -52,7 +53,7 @@ public:
     const auto t22 = std::sin(position[2]);
     const auto t24 = std::cos(position[2]);
     const auto t25 = static_cast<scalar_type>(1) / t22 * t24;
-    const auto t26 = t22 * t22;
+    const auto t26 = ipow<2>(t22);
 
     christoffel_symbols_type symbols;
     symbols.setZero();

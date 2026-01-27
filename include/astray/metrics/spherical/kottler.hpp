@@ -4,6 +4,7 @@
 
 #include <astray/core/metric.hpp>
 #include <astray/math/constants.hpp>
+#include <astray/math/ipow.hpp>
 
 namespace ast::metrics
 {
@@ -22,7 +23,7 @@ public:
     const auto r = position[1];
     if (r < static_cast<scalar_type>(0))
       return termination_reason::spacetime_breakdown;
-    const auto r_sq = r * r;
+    const auto r_sq = ipow<2>(r);
     if (std::abs(static_cast<scalar_type>(1) - rs / r 
       - consts::cosmological_constant / static_cast<scalar_type>(3) * r_sq) <= consts::epsilon)
       return termination_reason::spacetime_breakdown;
@@ -33,7 +34,7 @@ public:
   {
     const auto rs  = consts::schwarzschild_radius(mass);
     const auto r   = position[1];
-    const auto r_sq = r * r;
+    const auto r_sq = ipow<2>(r);
 
     const auto t2  = static_cast<scalar_type>(3) * rs;
     const auto t3  = r_sq;
@@ -46,7 +47,7 @@ public:
     const auto t22 = std::sin(position[2]);
     const auto t24 = std::cos(position[2]);
     const auto t25 = static_cast<scalar_type>(1) / t22 * t24;
-    const auto t26 = t22 * t22;
+    const auto t26 = ipow<2>(t22);
 
     christoffel_symbols_type symbols;
     symbols.setZero();

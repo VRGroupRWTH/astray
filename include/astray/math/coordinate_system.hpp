@@ -4,6 +4,7 @@
 
 #include <astray/math/angle.hpp>
 #include <astray/math/constants.hpp>
+#include <astray/math/ipow.hpp>
 #include <astray/math/linear_algebra.hpp>
 
 namespace ast
@@ -47,8 +48,8 @@ __device__ __host__ constexpr void convert    (type& value)
   {
     if      constexpr (target == coordinate_system_type::cylindrical)
     {
-      const scalar x_sq = value[1] * value[1];
-      const scalar y_sq = value[2] * value[2];
+      const scalar x_sq = ipow<2>(value[1]);
+      const scalar y_sq = ipow<2>(value[2]);
       const scalar rho = std::sqrt (x_sq + y_sq);
       const scalar phi = std::atan2(value[2], value[1]);
 
@@ -59,9 +60,9 @@ __device__ __host__ constexpr void convert    (type& value)
     }
     else if constexpr (target == coordinate_system_type::spherical)
     {
-      const scalar x_sq = value[1] * value[1];
-      const scalar y_sq = value[2] * value[2];
-      const scalar z_sq = value[3] * value[3];
+      const scalar x_sq = ipow<2>(value[1]);
+      const scalar y_sq = ipow<2>(value[2]);
+      const scalar z_sq = ipow<2>(value[3]);
       const scalar r     = std::sqrt (x_sq + y_sq + z_sq);
       const scalar theta = std::acos (value[3] / r);
       const scalar phi   = std::atan2(value[2], value[1]);
@@ -89,8 +90,8 @@ __device__ __host__ constexpr void convert    (type& value)
     {
       wrap_angles<source>(value);
 
-      const scalar rho_sq = value[1] * value[1];
-      const scalar z_sq   = value[3] * value[3];
+      const scalar rho_sq = ipow<2>(value[1]);
+      const scalar z_sq   = ipow<2>(value[3]);
       const scalar r      = std::sqrt(rho_sq + z_sq);
       const scalar theta  = std::atan2(value[1], value[3]);
       const scalar phi    = value[2];
@@ -141,8 +142,8 @@ __device__ __host__ constexpr void convert    (type& value, const scalar free_pa
     {
       wrap_angles<source>(value);
 
-      const scalar r_sq   = value[1] * value[1];
-      const scalar a_sq   = free_parameter * free_parameter;
+      const scalar r_sq   = ipow<2>(value[1]);
+      const scalar a_sq   = ipow<2>(free_parameter);
       const scalar sq_r2_p_a2 = std::sqrt(r_sq + a_sq);
 
       const scalar x = sq_r2_p_a2 * std::sin(value[2]) * std::cos(value[3]);
@@ -168,13 +169,13 @@ __device__ __host__ constexpr void convert    (type& value, const scalar free_pa
   {
     if      constexpr (target == coordinate_system_type::boyer_lindquist)
     {
-      const scalar x_sq = value[1] * value[1];
-      const scalar y_sq = value[2] * value[2];
-      const scalar z_sq = value[3] * value[3];
-      const scalar a_sq = free_parameter * free_parameter;
+      const scalar x_sq = ipow<2>(value[1]);
+      const scalar y_sq = ipow<2>(value[2]);
+      const scalar z_sq = ipow<2>(value[3]);
+      const scalar a_sq = ipow<2>(free_parameter);
       const scalar w = x_sq + y_sq + z_sq - a_sq;
 
-      const scalar w_sq = w * w;
+      const scalar w_sq = ipow<2>(w);
       const scalar r    = std::sqrt (static_cast<scalar>(0.5) * (w + std::sqrt(w_sq + static_cast<scalar>(4) * a_sq * z_sq)));
       const scalar theta = std::acos (value[3] / r);
       const scalar phi   = std::atan2(value[2], value[1]);
@@ -187,12 +188,12 @@ __device__ __host__ constexpr void convert    (type& value, const scalar free_pa
     }
     else if constexpr (target == coordinate_system_type::prolate_spheroidal)
     {
-      const scalar x_squared        = value[1] * value[1];
-      const scalar y_squared        = value[2] * value[2];
+      const scalar x_squared        = ipow<2>(value[1]);
+      const scalar y_squared        = ipow<2>(value[2]);
       const scalar z_plus_a         = value[3] + free_parameter;
       const scalar z_minus_a        = value[3] - free_parameter;
-      const scalar first_component  = std::sqrt(x_squared + y_squared + z_plus_a * z_plus_a);
-      const scalar second_component = std::sqrt(x_squared + y_squared + z_minus_a * z_minus_a);
+      const scalar first_component  = std::sqrt(x_squared + y_squared + ipow<2>(z_plus_a));
+      const scalar second_component = std::sqrt(x_squared + y_squared + ipow<2>(z_minus_a));
       const scalar _2a              = 2 * free_parameter;
 
       const scalar sigma = (first_component + second_component) / _2a;
@@ -225,8 +226,8 @@ __device__ __host__ constexpr void convert    (type& value, const scalar free_pa
     {
       wrap_angles<source>(value);
 
-      const scalar s_sq   = value[1] * value[1];
-      const scalar t_sq   = value[2] * value[2];
+      const scalar s_sq   = ipow<2>(value[1]);
+      const scalar t_sq   = ipow<2>(value[2]);
       const scalar common = free_parameter * std::sqrt((s_sq - static_cast<scalar>(1)) * (static_cast<scalar>(1) - t_sq));
       const scalar x      = common * std::cos(value[3]);
       const scalar y      = common * std::sin(value[3]);
@@ -383,8 +384,8 @@ __device__ __host__ constexpr void convert_ray(type& value, const scalar free_pa
       const scalar& r = value.position[1];
       const scalar& t = value.position[2];
       const scalar& p = value.position[3];
-      const scalar  a_sq = free_parameter * free_parameter;
-      const scalar  r_sq = r * r;
+      const scalar  a_sq = ipow<2>(free_parameter);
+      const scalar  r_sq = ipow<2>(r);
       const scalar  k = std::sqrt(a_sq + r_sq);
 
       matrix44<scalar> transform;
@@ -418,8 +419,8 @@ __device__ __host__ constexpr void convert_ray(type& value, const scalar free_pa
       const scalar& r = value.position[1];
       const scalar& t = value.position[2];
       const scalar& p = value.position[3];
-      const scalar  a_sq = free_parameter * free_parameter;
-      const scalar  r_sq = r * r;
+      const scalar  a_sq = ipow<2>(free_parameter);
+      const scalar  r_sq = ipow<2>(r);
       const scalar  k = std::sqrt(a_sq + r_sq);
 
       matrix44<scalar> transform;
@@ -440,15 +441,15 @@ __device__ __host__ constexpr void convert_ray(type& value, const scalar free_pa
       const scalar& t = value.position[2];
       const scalar& p = value.position[3];
       const scalar& a = free_parameter;
-      const scalar  s_sq = s * s;
-      const scalar  t_sq = t * t;
+      const scalar  s_sq = ipow<2>(s);
+      const scalar  t_sq = ipow<2>(t);
       const scalar  k = std::sqrt(-(s_sq - static_cast<scalar>(1)) * (t_sq - static_cast<scalar>(1)));
 
       matrix44<scalar> transform;
       transform << 
         1,                                                                    0,                                                                    0,                    0,
-        0, -a * s * (static_cast<scalar>(std::pow(t, 2)) - 1) * std::cos(p) / k, -a * t * (static_cast<scalar>(std::pow(s, 2)) - 1) * std::cos(p) / k, -a * std::sin(p) * k,
-        0, -a * s * (static_cast<scalar>(std::pow(t, 2)) - 1) * std::sin(p) / k, -a * t * (static_cast<scalar>(std::pow(s, 2)) - 1) * std::sin(p) / k,  a * std::cos(p) * k,
+        0, -a * s * (t_sq - 1) * std::cos(p) / k, -a * t * (s_sq - 1) * std::cos(p) / k, -a * std::sin(p) * k,
+        0, -a * s * (t_sq - 1) * std::sin(p) / k, -a * t * (s_sq - 1) * std::sin(p) / k,  a * std::cos(p) * k,
         0,  a * t                                                              ,  a * s                                                              ,                    0;
       transform = transform.inverse().eval(); // TODO: Ideally inversion should be analytic without runtime overhead.
 
@@ -476,15 +477,15 @@ __device__ __host__ constexpr void convert_ray(type& value, const scalar free_pa
       const scalar& t = value.position[2];
       const scalar& p = value.position[3];
       const scalar& a = free_parameter;
-      const scalar  s_sq = s * s;
-      const scalar  t_sq = t * t;
+      const scalar  s_sq = ipow<2>(s);
+      const scalar  t_sq = ipow<2>(t);
       const scalar  k = std::sqrt(-(s_sq - static_cast<scalar>(1)) * (t_sq - static_cast<scalar>(1)));
 
       matrix44<scalar> transform;
       transform << 
         1,                                                                    0,                                                                    0,                    0,
-        0, -a * s * (static_cast<scalar>(std::pow(t, 2)) - 1) * std::cos(p) / k, -a * t * (static_cast<scalar>(std::pow(s, 2)) - 1) * std::cos(p) / k, -a * std::sin(p) * k,
-        0, -a * s * (static_cast<scalar>(std::pow(t, 2)) - 1) * std::sin(p) / k, -a * t * (static_cast<scalar>(std::pow(s, 2)) - 1) * std::sin(p) / k,  a * std::cos(p) * k,
+        0, -a * s * (t_sq - 1) * std::cos(p) / k, -a * t * (s_sq - 1) * std::cos(p) / k, -a * std::sin(p) * k,
+        0, -a * s * (t_sq - 1) * std::sin(p) / k, -a * t * (s_sq - 1) * std::sin(p) / k,  a * std::cos(p) * k,
         0,  a * t                                                              ,  a * s                                                              ,                    0;
 
       convert<source, target>(value.position, free_parameter);

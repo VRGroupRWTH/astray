@@ -4,6 +4,7 @@
 
 #include <astray/core/metric.hpp>
 #include <astray/math/constants.hpp>
+#include <astray/math/ipow.hpp>
 
 namespace ast::metrics
 {
@@ -19,9 +20,9 @@ public:
   __device__ christoffel_symbols_type christoffel_symbols(const vector_type& position) const override
   {
     const auto xmvt          = position[1] - velocity * position[0];
-    const auto xmvt_sq       = xmvt * xmvt;
-    const auto y_sq          = position[2] * position[2];
-    const auto z_sq          = position[3] * position[3];
+    const auto xmvt_sq       = ipow<2>(xmvt);
+    const auto y_sq          = ipow<2>(position[2]);
+    const auto z_sq          = ipow<2>(position[3]);
     const auto rs            = std::sqrt(xmvt_sq + y_sq + z_sq);
 
     const auto tanh_positive = std::tanh(thickness * (rs + radius));
@@ -29,8 +30,8 @@ public:
     const auto w3            = std::tanh(thickness * radius);
     const auto f             = static_cast<scalar_type>(0.5) * (tanh_positive / w3 - tanh_negative / w3);
     
-    const auto tanh_pos_sq   = tanh_positive * tanh_positive;
-    const auto tanh_neg_sq   = tanh_negative * tanh_negative;
+    const auto tanh_pos_sq   = ipow<2>(tanh_positive);
+    const auto tanh_neg_sq   = ipow<2>(tanh_negative);
     const auto factor        = (tanh_neg_sq - tanh_pos_sq) * 
       (static_cast<scalar_type>(0.5) * thickness / (rs * w3));
     vector_type df {
@@ -39,14 +40,14 @@ public:
       position[2]      * factor,
       position[3]      * factor};
 
-    const auto v_sq = velocity * velocity;
+    const auto v_sq = ipow<2>(velocity);
     const auto t1  = v_sq;
     const auto t2  = t1 * velocity;
     const auto t3  = f;
-    const auto f_sq = f * f;
+    const auto f_sq = ipow<2>(f);
     const auto t4  = f_sq;
     const auto t6  = df[1];
-    const auto c_sq = consts::speed_of_light * consts::speed_of_light;
+    const auto c_sq = ipow<2>(consts::speed_of_light);
     const auto t7  = c_sq;
     const auto t8  = static_cast<scalar_type>(1) / t7;
     const auto t10 = t2 * t4 * t6 * t8;
