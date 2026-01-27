@@ -47,7 +47,7 @@ public:
     const auto f_sq = ipow<2>(f);
     const auto t4  = f_sq;
     const auto t6  = df[1];
-    const auto c_sq = ipow<2>(consts::speed_of_light);
+    const auto c_sq = consts::speed_of_light_squared;
     const auto t7  = c_sq;
     const auto t8  = static_cast<scalar_type>(1) / t7;
     const auto t10 = t2 * t4 * t6 * t8;
