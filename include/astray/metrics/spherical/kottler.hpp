@@ -37,8 +37,7 @@ public:
     const auto r_sq = ipow<2>(r);
 
     const auto t2  = static_cast<scalar_type>(3) * rs;
-    const auto t3  = r_sq;
-    const auto t4  = t3 * r;
+    const auto t4  = r_sq * r;
     const auto t5  = consts::cosmological_constant * t4;
     const auto t6  = -static_cast<scalar_type>(3) * r + t2 + t5;
     const auto t11 = -t2 + static_cast<scalar_type>(2) * t5;
@@ -47,7 +46,7 @@ public:
     const auto t22 = std::sin(position[2]);
     const auto t24 = std::cos(position[2]);
     const auto t25 = static_cast<scalar_type>(1) / t22 * t24;
-    const auto t26 = ipow<2>(t22);
+    const auto t22_sq = ipow<2>(t22);
 
     christoffel_symbols_type symbols;
     symbols.setZero();
@@ -62,7 +61,7 @@ public:
     symbols(2, 3, 3) =  t25;
     symbols(3, 1, 3) =  t15;
     symbols(3, 2, 3) =  t25;
-    symbols(3, 3, 1) =  t6  * t26 / static_cast<scalar_type>(3);
+    symbols(3, 3, 1) =  t6  * t22_sq / static_cast<scalar_type>(3);
     symbols(3, 3, 2) = -t22 * t24;
     return symbols;
   }

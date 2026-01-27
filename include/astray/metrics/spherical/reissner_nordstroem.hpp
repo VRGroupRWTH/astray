@@ -39,13 +39,10 @@ public:
   {
     const auto r   = position[1];
     const auto r_sq = ipow<2>(r);
-    const auto t1  = r_sq;
     const auto t2  = consts::schwarzschild_radius(mass) * r;
-    const auto t3  = ipow<2>(charge);
     const auto t4  = consts::characteristic_length_scale(charge);
-    const auto t5  = t1 - t2 + t4;
-    const auto t6  = ipow<2>(r_sq);
-    const auto t10 = consts::speed_of_light_squared;
+    const auto t5  = r_sq - t2 + t4;
+    const auto r_sq_sq = ipow<2>(r_sq);
     const auto t12 = t2 - static_cast<scalar_type>(2) * t4;
     const auto t16 = static_cast<scalar_type>(1) / r;
     const auto t20 = t16 / t5 * t12 / static_cast<scalar_type>(2);
@@ -53,11 +50,11 @@ public:
     const auto t22 = std::sin(position[2]);
     const auto t24 = std::cos(position[2]);
     const auto t25 = static_cast<scalar_type>(1) / t22 * t24;
-    const auto t26 = ipow<2>(t22);
+    const auto t22_sq = ipow<2>(t22);
 
     christoffel_symbols_type symbols;
     symbols.setZero();
-    symbols(0, 0, 1) =  t5 / t6 / r * t10 * t12 / static_cast<scalar_type>(2);
+    symbols(0, 0, 1) =  t5 / r_sq_sq / r * consts::speed_of_light_squared * t12 / static_cast<scalar_type>(2);
     symbols(0, 1, 0) =  t20;
     symbols(1, 0, 0) =  t20;
     symbols(1, 1, 1) = -t20;
@@ -68,7 +65,7 @@ public:
     symbols(2, 3, 3) =  t25;
     symbols(3, 1, 3) =  t16;
     symbols(3, 2, 3) =  t25;
-    symbols(3, 3, 1) = -t21 * t26;
+    symbols(3, 3, 1) = -t21 * t22_sq;
     symbols(3, 3, 2) = -t22 * t24;
     return symbols;
   }

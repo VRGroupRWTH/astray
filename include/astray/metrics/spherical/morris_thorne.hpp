@@ -18,14 +18,12 @@ public:
   {
     const auto r   = position[1];
     const auto r_sq = ipow<2>(r);
-    const auto t1  = r_sq;
     const auto b_sq = ipow<2>(throat_radius);
-    const auto t2  = b_sq;
-    const auto t5  = static_cast<scalar_type>(1) / (t1 + t2) * r;
+    const auto t5  = static_cast<scalar_type>(1) / (r_sq + b_sq) * r;
     const auto t6  = std::sin(position[2]);
     const auto t8  = std::cos(position[2]);
     const auto t9  = static_cast<scalar_type>(1) / t6 * t8;
-    const auto t10 = ipow<2>(t6);
+    const auto t6_sq = ipow<2>(t6);
 
     christoffel_symbols_type symbols;
     symbols.setZero();
@@ -36,7 +34,7 @@ public:
     symbols(2, 3, 3) = t9;
     symbols(3, 1, 3) = t5;
     symbols(3, 2, 3) = t9;
-    symbols(3, 3, 1) = -r * t10;
+    symbols(3, 3, 1) = -r * t6_sq;
     symbols(3, 3, 2) = -t6 * t8;
     return symbols;
   }
