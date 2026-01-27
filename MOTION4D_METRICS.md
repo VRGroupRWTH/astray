@@ -7,7 +7,7 @@ Original Motion4D library by Thomas Mueller (tauzero7): https://github.com/tauze
 
 ## Implementation Summary
 
-### Completed Metrics (26/41 = 63%)
+### Completed Metrics (30/41 = 73%)
 
 1. **Kasner** (cartesian) - `include/astray/metrics/cartesian/kasner.hpp`
    - Anisotropic cosmological solution
@@ -126,21 +126,34 @@ Original Motion4D library by Thomas Mueller (tauzero7): https://github.com/tauze
     - Simplified Alcubierre warp drive with smooth bubble transitions
     - Parameters: R (bubble size), dR (transition width), vs (bubble velocity)
 
+27. **TeoWHl** (spherical) - `include/astray/metrics/spherical/teo_wormhole.hpp`
+    - Teo wormhole metric with parameter l (rotating traversable wormhole)
+    - Uses potentials N(l), K(l), r(l), ω(l) that can be customized
+    - Standard potentials: N=1, K=1, r=√(l²+b₀²), ω=b₀²/(2(l²+b₀²)^(3/2))
+    - Reference: Edward Teo, Phys. Rev. D 58, 024014 (1998)
+
+28. **TaubNUT** (spherical) - `include/astray/metrics/spherical/taub_nut.hpp`
+    - Taub-NUT metric with gravitomagnetic monopole (NUT parameter)
+    - Boyer-Lindquist like spherical coordinates
+    - Parameters: mass, l (NUT parameter)
+    - Reference: Bini et al, Class. Quantum Grav. 19, 5481 (2002)
+
+29. **ErezRosenVar** (spherical) - `include/astray/metrics/spherical/erez_rosen_var.hpp`
+    - Erez-Rosen metric with variable deformation parameter
+    - Static axisymmetric solution with deformed mass distribution
+    - Parameters: mass, q (deformation parameter)
+
+30. **TeoSimpleWH** (spherical) - `include/astray/metrics/spherical/teo_simple_wormhole.hpp`
+    - Teo simple wormhole metric (axisymmetric rotating wormhole)
+    - Throat at l=0 with radius parameter b₀
+    - Reference: Edward Teo, Phys. Rev. D 58, 024014 (1998)
+
 ### Remaining Metrics by Priority
 
-#### High Priority - Can be implemented without complex special functions (4 remaining)
-These are straightforward implementations that don't require Lambert W, Fourier series, or other complex functions:
+#### High Priority - Can be implemented without complex special functions (0 remaining)
+All high-priority metrics have been implemented!
 
-- **TeoSimpleWH** (spherical) - Teo simple wormhole
-  - **Status**: Complex implementation with many terms
-- **TeoWHl** (spherical) - Teo wormhole with parameter l
-  - **Status**: Complex implementation with many terms
-- **HalilsoyWave** (cylindrical) - Halilsoy wave metric
-  - **Complexity**: Requires GSL Bessel functions (J0, J1)
-- **ErezRosenVar** (cylindrical) - Erez-Rosen with variable parameters
-  - **Status**: Has complex potential functions
-
-#### Medium Priority - Require special functions or complex calculations (13 metrics)
+#### Medium Priority - Require special functions or complex calculations (11 metrics remaining)
 These require Lambert W function, Fourier series, Bessel functions, or other advanced mathematical functions:
 
 - **Glampedakis** (spherical) - Glampedakis metric
@@ -154,9 +167,8 @@ These require Lambert W function, Fourier series, Bessel functions, or other adv
   - **Complexity**: Requires GSL Lambert W function (gsl_sf_lambert_W0)
   - Coordinates cover full Schwarzschild spacetime including both exterior and interior regions
 
-- **TaubNUT** (spherical) - Rotating solution with NUT parameter
-  - **Complexity**: Very complex Christoffel symbols with extensive polynomial expressions
-  - Important for studying gravitomagnetic monopoles
+- **TaubNUT** (spherical) - ✅ **COMPLETED** - `include/astray/metrics/spherical/taub_nut.hpp`
+  - Rotating solution with NUT parameter (gravitomagnetic monopole)
 
 - **SchwarzschildTortoise** (spherical) - Tortoise coordinate form
   - **Complexity**: Requires Lambert W function for coordinate transformation
@@ -168,13 +180,23 @@ These require Lambert W function, Fourier series, Bessel functions, or other adv
 - **SchwarzschildGravWave** (spherical) - Schwarzschild with gravitational wave
   - **Complexity**: Combination of Schwarzschild and wave perturbations
 
-- **AlcubierreSimple** (cartesian) - Simplified Alcubierre warp drive
-  - **Complexity**: Requires derivative calculations for shape function f(rs)
-  - rs = √((x - vst)² + y² + z²) with specific shape function
+- **HalilsoyWave** (cylindrical) - Halilsoy wave metric
+  - **Complexity**: Requires GSL Bessel functions (J0, J1)
+
+- **TomimatsuSato** (cylindrical) - Tomimatsu-Sato metric
+  - **Complexity**: Very complex with extensive helper functions and coordinate-dependent expressions
+  - Reference: V.S. Manko, Progress of Theoretical Physics 127, 1057 (2012)
 
 - **PlaneGravWave** (cartesian) - Plane gravitational wave (sandwich wave)
   - **Complexity**: Requires Fourier series expansion for wave functions p(u) and q(u)
   - Most complex implementation, needs numerical integration
+
+- **HartleThorneGB** (spherical) - Hartle-Thorne with Gauss-Bonnet
+  - **Complexity**: May require similar complexity to Glampedakis
+
+- **Glampedakis** (spherical) - Glampedakis metric
+  - **Complexity**: Requires calcKerr and calcGlampedakis helper functions with extensive calculations
+  - Important for LISA gravitational wave detection
 
 - **TomimatsuSato** (cylindrical) - Tomimatsu-Sato metric
   - **Complexity**: Complex coordinate-dependent expressions
