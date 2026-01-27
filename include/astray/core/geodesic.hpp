@@ -46,11 +46,8 @@ public:
           {
             const auto vel_i = velocity[i];
             for (auto j = 0; j < 4; ++j)
-            {
-              const auto vel_i_vel_j = vel_i * velocity[j];
               for (auto k = 0; k < 4; ++k)
-                dydt.tail(4)[k] -= christoffel_symbols(i, j, k) * vel_i_vel_j;
-            }
+                dydt.tail(4)[k] -= christoffel_symbols(i, j, k) * vel_i * velocity[j];
           }
           return dydt;
         }

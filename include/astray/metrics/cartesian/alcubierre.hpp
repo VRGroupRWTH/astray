@@ -19,33 +19,35 @@ public:
   __device__ christoffel_symbols_type christoffel_symbols(const vector_type& position) const override
   {
     const auto xmvt          = position[1] - velocity * position[0];
-    const auto rs            = static_cast<scalar_type>(std::sqrt(
-      std::pow(xmvt       , 2) +
-      std::pow(position[2], 2) + 
-      std::pow(position[3], 2)));
+    const auto xmvt_sq       = xmvt * xmvt;
+    const auto y_sq          = position[2] * position[2];
+    const auto z_sq          = position[3] * position[3];
+    const auto rs            = std::sqrt(xmvt_sq + y_sq + z_sq);
 
-    const auto w1            = std::tanh(thickness * (rs + radius));
-    const auto w2            = std::tanh(thickness * (rs - radius));
-    const auto w3            = std::tanh(thickness * radius);
-    const auto f             = static_cast<scalar_type>(0.5) * (w1 / w3 - w2 / w3);
-    
     const auto tanh_positive = std::tanh(thickness * (rs + radius));
     const auto tanh_negative = std::tanh(thickness * (rs - radius));
-    const auto factor        = static_cast<scalar_type>(
-      (std::pow(tanh_negative, 2) - std::pow(tanh_positive, 2)) * 
-      (static_cast<scalar_type>(0.5) * thickness / (rs * std::tanh(thickness * radius))));
+    const auto w3            = std::tanh(thickness * radius);
+    const auto f             = static_cast<scalar_type>(0.5) * (tanh_positive / w3 - tanh_negative / w3);
+    
+    const auto tanh_pos_sq   = tanh_positive * tanh_positive;
+    const auto tanh_neg_sq   = tanh_negative * tanh_negative;
+    const auto factor        = (tanh_neg_sq - tanh_pos_sq) * 
+      (static_cast<scalar_type>(0.5) * thickness / (rs * w3));
     vector_type df {
       -velocity * xmvt * factor,
                   xmvt * factor,
       position[2]      * factor,
       position[3]      * factor};
 
-    const auto t1  = std::pow(velocity, 2);
+    const auto v_sq = velocity * velocity;
+    const auto t1  = v_sq;
     const auto t2  = t1 * velocity;
     const auto t3  = f;
-    const auto t4  = std::pow(t3, 2);
+    const auto f_sq = f * f;
+    const auto t4  = f_sq;
     const auto t6  = df[1];
-    const auto t7  = std::pow(consts::speed_of_light, 2);
+    const auto c_sq = consts::speed_of_light * consts::speed_of_light;
+    const auto t7  = c_sq;
     const auto t8  = static_cast<scalar_type>(1) / t7;
     const auto t10 = t2 * t4 * t6 * t8;
     const auto t11 = df[0];
