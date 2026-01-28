@@ -7,7 +7,7 @@ Original Motion4D library by Thomas Mueller (tauzero7): https://github.com/tauze
 
 ## Implementation Summary
 
-### Completed Metrics (31/41 = 76%)
+### Completed Metrics (33/41 = 80%)
 
 1. **Kasner** (cartesian) - `include/astray/metrics/cartesian/kasner.hpp`
    - Anisotropic cosmological solution
@@ -175,48 +175,52 @@ Original Motion4D library by Thomas Mueller (tauzero7): https://github.com/tauze
     - Custom coordinates (t, x, y, phi)
     - Parameters: acceleration (A), mass (m)
 
+32. **SchwarzschildWT** (spherical) - `include/astray/metrics/spherical/schwarzschild_wt.hpp`
+    - Schwarzschild in Wheeler-Thorne coordinates
+    - Time component g_tt is constant (-c²)
+    - Useful for theoretical studies of black hole physics
+
+33. **SchwarzschildGravWave** (spherical) - `include/astray/metrics/spherical/schwarzschild_gravwave.hpp`
+    - Schwarzschild with gravitational wave perturbations
+    - Perturbations depend on Legendre polynomials (supports l=0 and l=1)
+    - Parameters: epsilon (amplitude), sigma (frequency), l (mode number)
+
 ### Remaining Metrics by Priority
 
 #### High Priority - Can be implemented without complex special functions (0 remaining)
 All high-priority metrics have been implemented!
 
-#### Medium Priority - Require special functions or complex calculations (10 metrics remaining)
+#### Medium Priority - Require special functions or complex calculations (8 metrics remaining)
 These require Lambert W function, Fourier series, Bessel functions, or other advanced mathematical functions:
 
 - **Kruskal** (spherical) - Maximal analytic extension of Schwarzschild
-  - **Complexity**: Requires GSL Lambert W function (gsl_sf_lambert_W0)
+  - **Status**: NOT IMPLEMENTED - Requires GSL Lambert W function (gsl_sf_lambert_W0)
   - Coordinates cover full Schwarzschild spacetime including both exterior and interior regions
 
 - **SchwarzschildTortoise** (spherical) - Tortoise coordinate form
-  - **Complexity**: Requires Lambert W function for coordinate transformation
+  - **Status**: NOT IMPLEMENTED - Requires Lambert W function for coordinate transformation
   - Useful for null geodesics and wave propagation
 
-- **SchwarzschildWT** (spherical) - Wheeler-Thorne coordinates
-  - **Complexity**: May require special coordinate transformations
-
-- **SchwarzschildGravWave** (spherical) - Schwarzschild with gravitational wave
-  - **Complexity**: Combination of Schwarzschild and wave perturbations
-
 - **HalilsoyWave** (cylindrical) - Halilsoy wave metric
-  - **Complexity**: Requires GSL Bessel functions (J0, J1)
+  - **Status**: NOT IMPLEMENTED - Requires GSL Bessel functions (J0, J1)
 
 - **PlaneGravWave** (cartesian) - Plane gravitational wave (sandwich wave)
-  - **Complexity**: Requires Fourier series expansion for wave functions p(u) and q(u)
+  - **Status**: NOT IMPLEMENTED - Requires Fourier series expansion for wave functions p(u) and q(u)
   - Most complex implementation, needs numerical integration
 
 - **HartleThorneGB** (spherical) - Hartle-Thorne with Gauss-Bonnet
-  - **Complexity**: May require similar complexity to Glampedakis
+  - **Status**: NOT IMPLEMENTED - Extremely complex (1212 lines) with extensive helper functions
 
 - **Glampedakis** (spherical) - Glampedakis metric
-  - **Complexity**: Requires calcKerr and calcGlampedakis helper functions with extensive calculations
+  - **Status**: NOT IMPLEMENTED - Requires calcKerr and calcGlampedakis helper functions with extensive calculations
   - Important for LISA gravitational wave detection
 
 - **TomimatsuSato** (cylindrical) - Tomimatsu-Sato metric
-  - **Complexity**: Very complex with extensive helper functions and coordinate-dependent expressions
+  - **Status**: NOT IMPLEMENTED - Very complex (783 lines) with extensive helper functions and coordinate-dependent expressions
   - Reference: V.S. Manko, Progress of Theoretical Physics 127, 1057 (2012)
 
 - **Pravda_C_Can** (cylindrical) - Pravda C in canonical coordinates
-  - **Complexity**: Canonical coordinate form with complex helper functions
+  - **Status**: NOT IMPLEMENTED - Complex (713 lines) with root-finding and auxiliary function calculations
 
 
 ## Implementation Guidelines
@@ -304,12 +308,21 @@ Currently, there is minimal test infrastructure. Focus on:
 
 ## Future Work
 
-To complete the remaining 36 metrics:
-1. Implement high-priority metrics first (Kruskal, TaubNUT, etc.)
-2. Handle complex metrics requiring numerical methods separately
-3. Consider adding unit tests for Christoffel symbol correctness
-4. Add validation against known geodesics where available
-5. Document physical significance and use cases for each metric
+To complete the remaining 8 metrics:
+1. Consider adding GSL or similar library as dependency to enable Lambert W and Bessel functions
+2. Implement a specialized "special functions" library for commonly needed functions
+3. Focus on simpler alternative metrics not in Motion4D that provide similar physics
+4. Consider adding unit tests for Christoffel symbol correctness
+5. Add validation against known geodesics where available
+6. Document physical significance and use cases for each metric
+
+## Detailed Analysis
+
+See **FINAL_10_METRICS_REPORT.md** for a comprehensive analysis of the final 10 metrics, including:
+- Detailed reasons why each metric was not implemented
+- External dependencies required
+- Code complexity analysis
+- Recommendations for future work
 
 ## References
 
