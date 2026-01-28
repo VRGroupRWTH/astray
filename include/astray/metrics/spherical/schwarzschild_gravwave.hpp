@@ -75,6 +75,13 @@ private:
     const auto r4 = r2 * r2;
     
     const auto f = static_cast<scalar_type>(1) - rs / r;
+    
+    // Guard against division by zero at event horizon
+    if (f < consts::epsilon) {
+      htt = hrr = hee = hpp = static_cast<scalar_type>(0);
+      return;
+    }
+    
     const auto p = M - (M * M + sigma * sigma * r4) / (r - static_cast<scalar_type>(2) * M);
     const auto q = std::sqrt(f) / r2;
     
@@ -92,7 +99,14 @@ private:
     htt = -f * X * Pl * cst;
     hrr = Y / f * Pl * cst;
     hee = r2 * (Z * Pl + W * Pltt) * cst;
-    hpp = r2 * sth * sth * (Z * Pl + W * Plt * std::cos(theta) / sth) * cst;
+    
+    // Guard against division by zero at poles
+    if (std::abs(sth) > consts::epsilon) {
+      const auto cot = std::cos(theta) / sth;
+      hpp = r2 * sth * sth * (Z * Pl + W * Plt * cot) * cst;
+    } else {
+      hpp = static_cast<scalar_type>(0);
+    }
   }
 
   // Calculate perturbations and their derivatives
@@ -114,6 +128,17 @@ private:
     const auto r4 = r2 * r2;
     
     const auto f = static_cast<scalar_type>(1) - rs / r;
+    
+    // Guard against division by zero at event horizon
+    if (f < consts::epsilon || std::abs(r - static_cast<scalar_type>(2) * M) < consts::epsilon) {
+      htt = hrr = hee = hpp = static_cast<scalar_type>(0);
+      htt_t = htt_r = htt_theta = static_cast<scalar_type>(0);
+      hrr_t = hrr_r = hrr_theta = static_cast<scalar_type>(0);
+      hee_t = hee_r = hee_theta = static_cast<scalar_type>(0);
+      hpp_t = hpp_r = hpp_theta = static_cast<scalar_type>(0);
+      return;
+    }
+    
     const auto df = rs / r2;
     const auto sf = std::sqrt(f);
     const auto p = M - (M * M + sigma * sigma * r4) / (r - static_cast<scalar_type>(2) * M);
@@ -131,13 +156,12 @@ private:
     const auto sst = std::sin(sigma * t);
     const auto sth = std::sin(theta);
     const auto cth = std::cos(theta);
-    const auto cot = cth / sth;
     
     htt = -f * X * Pl * cst;
     hrr = Y / f * Pl * cst;
     hee = r2 * (Z * Pl + W * Pltt) * cst;
-    hpp = r2 * sth * sth * (Z * Pl + W * Plt * cot) * cst;
     
+    // Calculate derivatives
     const auto dp = -(sigma * sigma * r3 * (static_cast<scalar_type>(3) * r - static_cast<scalar_type>(4) * rs) - M * M) / ((r - rs) * (r - rs));
     const auto dq = (static_cast<scalar_type>(0.5) * rs / sf - static_cast<scalar_type>(2) * sf * r) / r4;
     const auto DX = dp * q + p * dq;
@@ -157,10 +181,18 @@ private:
     hee_r = static_cast<scalar_type>(2) * r * (Z * Pl + W * Pltt) * cst + r2 * (DZ * Pl + DW * Pltt) * cst;
     hee_theta = r2 * (Z * Plt + W * Plttt) * cst;
     
-    hpp_t = -r2 * sth * sth * (Z * Pl + W * Plt * cot) * sst * sigma;
-    hpp_r = static_cast<scalar_type>(2) * r * sth * sth * (Z * Pl + W * Plt * cot) * cst + r2 * sth * sth * (DZ * Pl + DW * Plt * cot) * cst;
-    hpp_theta = static_cast<scalar_type>(2) * r2 * sth * (Z * Pl + W * Plt * cot) * cst * cth
-              + r2 * sth * sth * (Z * Plt + W * Pltt * cot + W * Plt * (-static_cast<scalar_type>(1) - cot * cot)) * cst;
+    // Guard against division by zero at poles
+    if (std::abs(sth) > consts::epsilon) {
+      const auto cot = cth / sth;
+      hpp = r2 * sth * sth * (Z * Pl + W * Plt * cot) * cst;
+      hpp_t = -r2 * sth * sth * (Z * Pl + W * Plt * cot) * sst * sigma;
+      hpp_r = static_cast<scalar_type>(2) * r * sth * sth * (Z * Pl + W * Plt * cot) * cst + r2 * sth * sth * (DZ * Pl + DW * Plt * cot) * cst;
+      hpp_theta = static_cast<scalar_type>(2) * r2 * sth * (Z * Pl + W * Plt * cot) * cst * cth
+                + r2 * sth * sth * (Z * Plt + W * Pltt * cot + W * Plt * (-static_cast<scalar_type>(1) - cot * cot)) * cst;
+    } else {
+      hpp = static_cast<scalar_type>(0);
+      hpp_t = hpp_r = hpp_theta = static_cast<scalar_type>(0);
+    }
   }
 
 public:

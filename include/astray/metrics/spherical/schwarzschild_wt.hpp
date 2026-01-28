@@ -55,10 +55,8 @@ public:
     symbols.setZero();
     
     // Note: In Wheeler-Thorne coordinates, g_tt = -c^2 (constant), 
-    // so christoffel[0][0][1] = 0 (unlike standard Schwarzschild)
-    symbols(0, 0, 1) = static_cast<scalar_type>(0);
-    symbols(0, 1, 0) = static_cast<scalar_type>(0);
-    symbols(1, 0, 0) = static_cast<scalar_type>(0);
+    // so christoffel[0][0][1], christoffel[0][1][0], christoffel[1][0][0] = 0
+    // (unlike standard Schwarzschild where they are non-zero)
     symbols(1, 1, 1) = -t14;
     symbols(1, 2, 2) =  t10;
     symbols(1, 3, 3) =  t10;
